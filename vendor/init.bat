@@ -7,6 +7,9 @@
     for /f "delims=" %%i in ("%ConEmuDir%\..\..") do @set CMDER_ROOT=%%~fi
 )
 
+:: Set config dir
+@if not defined CMDER_CONFIG set CMDER_CONFIG=%CMDER_ROOT%\config
+
 :: Change the prompt style
 :: Mmm tasty lamb
 @prompt $E[1;32;40m$P$S{git}{hg}$S$_$E[1;30;40m{lamb}$S$E[0m
@@ -18,8 +21,14 @@
     set architecture=64
 )
 
+setlocal
+set CLINK_PROFILE="%CMDER_CONFIG%\clink"
+:: If clink profile is not exists in user-defined location, then use default one
+if not exist %CLINK_PROFILE% set CLINK_PROFILE="%~dp0\config\clink"
+
 :: Run clink
-@"%CMDER_ROOT%\vendor\clink\clink_x%architecture%.exe" inject --quiet --profile "%CMDER_ROOT%\config"
+@"%CMDER_ROOT%\vendor\clink\clink_x%architecture%.exe" inject --quiet --profile %CLINK_PROFILE%
+endlocal
 
 :: Prepare for msysgit
 
@@ -47,7 +56,7 @@
 @set PATH=%CMDER_ROOT%\bin;%PATH%;%CMDER_ROOT%
 
 :: Add aliases
-@doskey /macrofile="%CMDER_ROOT%\config\aliases"
+@%CMDER_ROOT%\bin\alias /reload >NUL
 
 :: Set home path
 @if not defined HOME set HOME=%USERPROFILE%

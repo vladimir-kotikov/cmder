@@ -1,6 +1,8 @@
 @echo off
 
 set ALIASES=%CMDER_ROOT%\config\aliases
+:: If CMDER_CONFIG is defined, then store aliases there
+if defined CMDER_CONFIG set ALIASES=%CMDER_CONFIG%\aliases
 
 if ["%*"] == [""] echo Use /? for help & echo. & goto :p_show
 if ["%1"] == ["/?"] goto:p_help

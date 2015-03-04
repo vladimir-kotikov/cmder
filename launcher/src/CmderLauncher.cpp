@@ -88,6 +88,7 @@ void StartCmder(std::wstring path, bool is_single_mode)
 	wchar_t icoPath[MAX_PATH] = { 0 };
 	wchar_t cfgPath[MAX_PATH] = { 0 };
 	wchar_t conEmuPath[MAX_PATH] = { 0 };
+	wchar_t cmderConfig[MAX_PATH] = { 0 };
 	wchar_t args[MAX_PATH * 2 + 256] = { 0 };
 
 	GetModuleFileName(NULL, exeDir, sizeof(exeDir));
@@ -99,8 +100,20 @@ void StartCmder(std::wstring path, bool is_single_mode)
 	PathRemoveFileSpec(exeDir);
 
 	PathCombine(icoPath, exeDir, L"icons\\cmder.ico");
-	PathCombine(cfgPath, exeDir, L"config\\ConEmu.xml");
 	PathCombine(conEmuPath, exeDir, L"vendor\\conemu-maximus5\\ConEmu.exe");
+
+	if (!GetEnvironmentVariable(L"CMDER_CONFIG", cmderConfig, MAX_PATH))
+	{
+		PathCombine(cmderConfig, exeDir, L"config");
+		SetEnvironmentVariable(L"CMDER_CONFIG", cmderConfig);
+	}
+
+	PathCombine(cfgPath, cmderConfig, L"ConEmu.xml");
+	// If ConEmu config not exists in user-defined location, then use default one
+	if (!PathFileExists(cfgPath))
+	{
+		PathCombine(cfgPath, exeDir, L"config\\ConEmu.xml");
+	}
 
 	if (is_single_mode) 
 	{
