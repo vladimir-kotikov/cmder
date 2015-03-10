@@ -21,14 +21,14 @@
     set architecture=64
 )
 
-setlocal
-set CLINK_PROFILE="%CMDER_CONFIG%\clink"
+@setlocal
+@set CLINK_PROFILE="%CMDER_CONFIG%\clink"
 :: If clink profile is not exists in user-defined location, then use default one
-if not exist %CLINK_PROFILE% set CLINK_PROFILE="%~dp0\config\clink"
+@if not exist %CLINK_PROFILE% set CLINK_PROFILE="%~dp0\config\clink"
 
 :: Run clink
 @"%CMDER_ROOT%\vendor\clink\clink_x%architecture%.exe" inject --quiet --profile %CLINK_PROFILE%
-endlocal
+@endlocal
 
 :: Prepare for msysgit
 
